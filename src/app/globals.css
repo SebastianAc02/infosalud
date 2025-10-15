@@ -2,32 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    /* Base neutra clara */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    /* Superficies */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primario “salud” (teal azulado) */
+    --primary: 197 65% 36%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secundarios / neutrales */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 46%;
+    --accent: 210 40% 97%;
+    --accent-foreground: 222 47% 11%;
+
+    /* Semánticos */
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 160 84% 32%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 98%;
+
+    /* Bordes/inputs/foco */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 197 65% 36%;
+
+    /* Charts coherentes con el tema */
+    --chart-1: 197 65% 36%;
+    --chart-2: 160 84% 32%;
+    --chart-3: 199 89% 48%;
+    --chart-4: 41 86% 58%;
+    --chart-5: 339 84% 60%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Base oscura */
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+
+    /* Superficies */
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primario (ligeramente más luminoso en dark) */
+    --primary: 197 70% 48%;
+    --primary-foreground: 222 47% 9%;
+
+    /* Secundarios / neutrales */
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Semánticos en dark */
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 160 70% 45%;
+    --success-foreground: 222 47% 9%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 222 47% 9%;
+    --info: 199 89% 60%;
+    --info-foreground: 222 47% 9%;
+
+    /* Bordes/inputs/foco */
+    --border: 217 19% 24%;
+    --input: 217 19% 24%;
+    --ring: 197 70% 48%;
+
+    /* Charts */
+    --chart-1: 197 70% 48%;
+    --chart-2: 160 70% 45%;
+    --chart-3: 199 89% 60%;
+    --chart-4: 41 90% 60%;
+    --chart-5: 339 84% 62%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* 🔹 Títulos de página: estilo unificado como “Configuración”.
+     Forzamos peso y familia para que no lo pisen `font-bold` o `font-heading`. */
+  h1 {
+    @apply text-2xl sm:text-3xl tracking-tight;
+    font-weight: 600 !important;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
   }
 }
