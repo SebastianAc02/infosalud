@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# InfoSalud
 
-## Getting Started
+Aplicación para EPS orientada al **seguimiento de pacientes con enfermedades crónicas**. Construida con **Next.js (App Router)**, **Tailwind CSS** y **shadcn/ui**. Incluye autenticación con **NextAuth**, control de **roles** (administrador, médico, auxiliar), reportes con filtros/exportación y gestión básica de pacientes (front-only con localStorage).
 
-First, run the development server:
+---
+
+## Requisitos
+
+- **Node.js** 18.17+ (recomendado 20+)
+- **npm** 9/10+
+- Archivo de entorno: **`.env.local`**
+
+Ejemplo mínimo:
+```bash
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=tu-secreto-aleatorio
+````
+
+---
+
+## Empezar (desarrollo)
+
+Instala dependencias e inicia el servidor:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000) para ver la app.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+> La app usa el **App Router** en `src/app`. Puedes editar páginas como `src/app/(dashboard)/page.js`; la página se actualiza en caliente.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## Scripts útiles
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev      # desarrollo
+npm run build    # build de producción
+npm run start    # servir producción después de build
+npm run lint     # linting
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## UI y estilos
 
-## Deploy on Vercel
+* **Tailwind CSS** (ver `tailwind.config.js` y `src/app/globals.css`)
+* **shadcn/ui** en `src/components/ui/*` (botones, inputs, cards, tablas, etc.)
+* Paleta y tokens accesibles via `:root` en `globals.css`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Roles y acceso
+
+* **Administrador**: acceso total (gestión de usuarios, configuración, reportes, etc.)
+* **Médico**: pacientes, reportes, registrar asistencia y seguimiento
+* **Auxiliar**: pacientes y seguimiento; **no** registra asistencia
+* Rutas del dashboard protegidas con **NextAuth** y **middleware**.
+
+---
+
+## Reportes y seguimiento
+
+* **Reportes**: filtros por EPS/diagnóstico/sede/médico, toggle “solo no asistidas”, exportación CSV y **resumen mensual** imprimible.
+* **Seguimiento**: registro por **SMS / WhatsApp / Llamada** con resultado y notas; opción de **generar alerta temprana**.
+* **Adherencia**: se calcula por paciente a partir de **citas pasadas** (asistidas / total).
+
+---
+
+## Aprende más (Next.js)
+
+Este proyecto partió del template de `create-next-app`. Recursos útiles:
+
+* [Documentación Next.js](https://nextjs.org/docs)
+* [Tutorial interactivo](https://nextjs.org/learn)
+* [Repositorio Next.js](https://github.com/vercel/next.js)
+
+### Deploy en Vercel
+
+La forma más sencilla es con [Vercel](https://vercel.com).
+Guía: [Next.js deployment docs](https://nextjs.org/docs/deployment).
