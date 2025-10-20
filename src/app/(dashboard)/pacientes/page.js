@@ -92,7 +92,7 @@ export default function PacientesPage() {
     <div className="space-y-6">
       {/* Encabezado */}
       <div>
-        <h1>Lista de Pacientes</h1>
+        <h1>Lista de pacientes</h1>
         <p className="text-sm text-muted-foreground">
           Busca por nombre o identificación. Click en el nombre para ver el detalle.
         </p>

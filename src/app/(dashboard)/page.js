@@ -57,7 +57,7 @@ export default function DashboardPage() {
   return (
     <div>
       <h1 className="text-3xl font-bold font-heading mb-6 text-foreground">
-        Dashboard Principal
+        Dashboard principal
       </h1>
       <p className="mb-8 text-muted-foreground">
         Resumen general del estado de los pacientes crónicos.
@@ -70,7 +70,7 @@ export default function DashboardPage() {
           <DialogTrigger asChild>
             <div className="bg-card text-card-foreground p-6 rounded-lg shadow-md cursor-pointer hover:bg-muted/50 transition-colors">
               <h3 className="font-bold font-heading text-lg text-muted-foreground">
-                Citas Perdidas (Mes)
+                Citas perdidas (mes)
               </h3>
               <p className="text-2xl font-bold mt-2 text-foreground">
                 {kpis.citasPerdidas}
@@ -79,7 +79,7 @@ export default function DashboardPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Pacientes con Citas Perdidas este Mes</DialogTitle>
+              <DialogTitle>Pacientes con citas perdidas este mes</DialogTitle>
             </DialogHeader>
             <div className="mt-4 space-y-4">
               {kpis.patientsWithLostAppointments.length > 0 ? (
@@ -90,7 +90,7 @@ export default function DashboardPage() {
                       <p className="text-sm text-muted-foreground">Perdió {patient.citasPerdidasEsteMes.length} cita(s)</p>
                     </div>
                     <Link href={`/pacientes/${patient.id}`} className="text-sm text-primary hover:underline">
-                      Ver Perfil
+                      Ver perfil
                     </Link>
                   </div>
                 ))
@@ -106,7 +106,7 @@ export default function DashboardPage() {
           <DialogTrigger asChild>
             <div className="bg-card text-card-foreground p-6 rounded-lg shadow-md cursor-pointer hover:bg-muted/50 transition-colors">
               <h3 className="font-bold font-heading text-lg text-muted-foreground">
-                Alertas Activas
+                Alertas activas
               </h3>
               <p className="text-2xl font-bold mt-2 text-yellow-500">
                 {kpis.activeAlerts}
@@ -115,7 +115,7 @@ export default function DashboardPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Pacientes con Alertas Activas</DialogTitle>
+              <DialogTitle>Pacientes con alertas activas</DialogTitle>
               <DialogDescription>
                 Estos pacientes requieren atención prioritaria.
               </DialogDescription>
@@ -129,7 +129,7 @@ export default function DashboardPage() {
                       <p className="text-sm text-muted-foreground">{patient.diagnostico}</p>
                     </div>
                     <Link href={`/pacientes/${patient.id}`} className="text-sm text-primary hover:underline">
-                      Ver Perfil
+                      Ver perfil
                     </Link>
                   </div>
                 ))
@@ -143,7 +143,7 @@ export default function DashboardPage() {
         {/* Tarjeta de Adherencia General */}
         <div className="bg-card text-card-foreground p-6 rounded-lg shadow-md">
           <h3 className="font-bold font-heading text-lg text-muted-foreground">
-            Adherencia General
+            Adherencia general
           </h3>
           <p className="text-2xl font-bold mt-2 text-foreground">
             {kpis.adherenciaGeneral}

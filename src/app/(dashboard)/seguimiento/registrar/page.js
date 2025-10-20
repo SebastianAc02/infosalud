@@ -65,7 +65,7 @@ export default function RegistrarSeguimientoPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1>Registrar Seguimiento</h1>
+        <h1>Registrar seguimiento</h1>
         <p className="text-sm text-muted-foreground">
           Registra intentos de contacto (SMS, WhatsApp o Llamada) y su resultado. La adherencia se calcula automáticamente por paciente.
         </p>

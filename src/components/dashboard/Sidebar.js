@@ -34,9 +34,9 @@ export function NavigationLinks({ isCollapsed }) {
     { href: "/", label: "Dashboard", icon: LayoutDashboard, roles: ['medico', 'auxiliar', 'admin'] },
     { href: "/pacientes", label: "Pacientes", icon: Users, roles: ['medico', 'auxiliar', 'admin'] },
     // Médico y Admin pueden registrar asistencia
-    { href: "/seguimiento/asistencia", label: "Registrar Asistencia", icon: CheckCheck, roles: ['medico', 'admin'] },
+    { href: "/seguimiento/asistencia", label: "Registrar asistencia", icon: CheckCheck, roles: ['medico', 'admin'] },
     // Todos pueden registrar seguimiento
-    { href: "/seguimiento/registrar", label: "Registrar Seguimiento", icon: ClipboardPlus, roles: ['auxiliar', 'medico', 'admin'] },
+    { href: "/seguimiento/registrar", label: "Registrar seguimiento", icon: ClipboardPlus, roles: ['auxiliar', 'medico', 'admin'] },
     // Reportes: Médico y Admin
     { href: "/reportes", label: "Reportes", icon: BarChart3, roles: ['medico', 'admin'] },
     // Configuración: todos (el Admin verá más dentro)

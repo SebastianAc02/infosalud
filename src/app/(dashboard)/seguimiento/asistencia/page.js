@@ -91,7 +91,7 @@ export default function RegistrarAsistenciaPage() {
   return (
     <div>
       {/* Título unificado */}
-      <h1>Registrar Asistencia de Citas</h1>
+      <h1>Registrar asistencia de citas</h1>
 
       {/* Filtro */}
       {pacientesConCita.length > 0 && (

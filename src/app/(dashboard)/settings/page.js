@@ -13,7 +13,7 @@ import {
   Card, CardContent, CardHeader, CardTitle, CardDescription
 } from '@/components/ui/card';
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
 } from '@/components/ui/dialog';
 import {
   Select, SelectTrigger, SelectValue, SelectContent, SelectItem
@@ -48,17 +48,17 @@ export default function SettingsPage() {
   const userKey = email;
   const admin = isAdmin(session?.user?.role);
 
-  //Preferencias personales (frontend-only)
+  // Preferencias personales (frontend-only)
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
 
-  //Gestión de usuarios (solo admin)
+  // Gestión de usuarios (solo admin)
   const [users, setUsers] = useState([]);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [formUser, setFormUser] = useState({ name: '', email: '', role: 'auxiliar', eps: '', estado: 'activo' });
 
-  //Pacientes: preferencias de contacto por paciente
+  // Pacientes: preferencias de contacto por paciente
   const { patients, updateCanalesPaciente } = usePatients();
   const [selectedId, setSelectedId] = useState('');
   const selectedPatient = useMemo(
@@ -66,6 +66,79 @@ export default function SettingsPage() {
     [selectedId, patients]
   );
   const [channels, setChannels] = useState({ sms: false, email: false, push: false });
+
+  // ─────────────────────────────────────────────────────────────
+  // NUEVO: Información de la cuenta con verificación por correo
+  // ─────────────────────────────────────────────────────────────
+  const savedAccount = useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem('accountInfoOverrides') || '{}');
+    } catch {
+      return {};
+    }
+  }, []);
+
+  const [accName, setAccName] = useState(savedAccount.name ?? name);
+  const [accPhone, setAccPhone] = useState(savedAccount.phone ?? '');
+  const [wantPasswordChange, setWantPasswordChange] = useState(false);
+  const [newPass, setNewPass] = useState('');
+  const [newPass2, setNewPass2] = useState('');
+
+  const [accDirty, setAccDirty] = useState(false);
+  const [verifyOpen, setVerifyOpen] = useState(false);
+  const [verifyCode, setVerifyCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  useEffect(() => {
+    setAccDirty(
+      accName !== (savedAccount.name ?? name) ||
+      accPhone !== (savedAccount.phone ?? '') ||
+      (wantPasswordChange && newPass.length > 0)
+    );
+  }, [accName, accPhone, wantPasswordChange, newPass, name, savedAccount]);
+
+  const submitAccount = (e) => {
+    e?.preventDefault?.();
+    if (!accDirty) {
+      toast('No hay cambios para guardar.');
+      return;
+    }
+    if (wantPasswordChange && newPass !== newPass2) {
+      toast.error('Las contraseñas no coinciden.');
+      return;
+    }
+    setVerifyOpen(true);
+    toast.success(`Enviamos un código de verificación a ${email}`);
+  };
+
+  const confirmAccountCode = async () => {
+    if (verifyCode.trim().length !== 6) {
+      toast.error('Ingresa el código de 6 dígitos.');
+      return;
+    }
+    try {
+      setIsVerifying(true);
+      // Simulación (aquí iría la verificación real con backend)
+      await new Promise((r) => setTimeout(r, 800));
+
+      const payload = {
+        name: accName.trim(),
+        phone: accPhone.trim(),
+        // Nota: el password change NO se aplica en front-only.
+      };
+      localStorage.setItem('accountInfoOverrides', JSON.stringify(payload));
+
+      setVerifyOpen(false);
+      setVerifyCode('');
+      setWantPasswordChange(false);
+      setNewPass('');
+      setNewPass2('');
+      toast.success('Cambios confirmados. Se aplicarán al iniciar sesión nuevamente.');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+  // ─────────────────────────────────────────────────────────────
 
   useEffect(() => {
     (async () => {
@@ -197,7 +270,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Perfil */}
+        {/* Perfil (solo lectura) */}
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle>Perfil</CardTitle>
@@ -303,6 +376,94 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* NUEVO: Información de la cuenta (editable con verificación por correo) */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Información de la cuenta</CardTitle>
+          <CardDescription>
+            Cambia tu nombre y teléfono. Para aplicar, confirma con el código enviado a tu correo.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form className="grid gap-4" onSubmit={submitAccount}>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="accName">Nombre completo</Label>
+                <Input
+                  id="accName"
+                  value={accName}
+                  onChange={(e) => setAccName(e.target.value)}
+                  placeholder="Tu nombre"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="accEmail">Correo</Label>
+                <Input id="accEmail" value={email} disabled />
+                <p className="text-xs text-muted-foreground">
+                  El correo lo gestiona tu EPS. Para cambiarlo, contacta a administración.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="accPhone">Teléfono (opcional)</Label>
+                <Input
+                  id="accPhone"
+                  value={accPhone}
+                  onChange={(e) => setAccPhone(e.target.value)}
+                  placeholder="Ej. 3001234567"
+                  inputMode="tel"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="accRole">Rol</Label>
+                <Input id="accRole" value={role} disabled />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="accPassToggle"
+                checked={wantPasswordChange}
+                onCheckedChange={(v) => setWantPasswordChange(!!v)}
+              />
+              <Label htmlFor="accPassToggle">Quiero cambiar mi contraseña</Label>
+            </div>
+
+            {wantPasswordChange && (
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="accPass">Nueva contraseña</Label>
+                  <Input
+                    id="accPass"
+                    type="password"
+                    value={newPass}
+                    onChange={(e) => setNewPass(e.target.value)}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="accPass2">Repetir contraseña</Label>
+                  <Input
+                    id="accPass2"
+                    type="password"
+                    value={newPass2}
+                    onChange={(e) => setNewPass2(e.target.value)}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground sm:col-span-2">
+                  Nota: el cambio de contraseña requiere backend; aquí solo mostramos el flujo de verificación.
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button type="submit" disabled={!accDirty}>Guardar cambios</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
 
       {/* Preferencias de contacto del paciente (por paciente) */}
       <Card>
@@ -507,6 +668,41 @@ export default function SettingsPage() {
             <Button variant="outline" onClick={() => setUserDialogOpen(false)}>Cancelar</Button>
             <Button onClick={onSaveUser}>{editing ? 'Guardar' : 'Crear'}</Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Diálogo de verificación por correo (para Información de la cuenta) */}
+      <Dialog open={verifyOpen} onOpenChange={setVerifyOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirma los cambios</DialogTitle>
+            <DialogDescription>
+              Te enviamos un código de 6 dígitos a <span className="font-medium">{email}</span>. Ingresa el código para aplicar los cambios de tu cuenta.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-2">
+            <Label htmlFor="verifyCode">Código de verificación</Label>
+            <Input
+              id="verifyCode"
+              inputMode="numeric"
+              maxLength={6}
+              placeholder="••••••"
+              value={verifyCode}
+              onChange={(e) => setVerifyCode(e.target.value.replace(/\D+/g, '').slice(0, 6))}
+              className="tracking-widest text-center text-lg"
+            />
+            <p className="text-xs text-muted-foreground">
+              ¿No recibiste el correo? Puedes reenviar en unos segundos.
+            </p>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setVerifyOpen(false)}>Cancelar</Button>
+            <Button onClick={confirmAccountCode} disabled={verifyCode.length !== 6 || isVerifying}>
+              {isVerifying ? 'Verificando…' : 'Confirmar y guardar'}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
