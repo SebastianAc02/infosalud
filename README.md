@@ -3,6 +3,9 @@
 
 Aplicación para EPS orientada al **seguimiento de pacientes con enfermedades crónicas**. Construida con **Next.js (App Router)**, **Tailwind CSS** y **shadcn/ui**. Incluye autenticación con **NextAuth**, control de **roles** (administrador, médico, auxiliar), reportes con filtros/exportación y gestión básica de pacientes (front-only con `localStorage`).
 
+
+
+Backend : https://github.com/SebastianAc02/backend_infosalud-
 ---
 
 ## Requisitos
