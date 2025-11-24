@@ -6,6 +6,8 @@ Aplicación para EPS orientada al **seguimiento de pacientes con enfermedades cr
 
 
 Backend : https://github.com/SebastianAc02/backend_infosalud-
+
+url deploy azure: https://backendinfosaludv2-dpfdepf5bvbch8ha.canadacentral-01.azurewebsites.net/api/
 ---
 
 ## Requisitos
